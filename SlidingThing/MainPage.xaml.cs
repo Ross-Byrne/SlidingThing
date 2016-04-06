@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 
@@ -41,6 +42,21 @@ namespace SlidingThing
 
             _gridSize = gridSize;
             createGameGrid(gridSize);
+
+            // add picture
+            Image img = new Image();
+            img.Source = new BitmapImage(new Uri("ms-appx:///Assets/Pictures/tree.png"));
+
+
+
+            img.HorizontalAlignment = HorizontalAlignment.Center;
+            img.VerticalAlignment = VerticalAlignment.Center;
+            img.SetValue(Grid.RowProperty, 0);
+            img.SetValue(Grid.ColumnProperty, 0);
+           
+    
+            contentGrid.Children.Add(img);
+
         }
 
         private void createGameGrid(int gridSize) {
