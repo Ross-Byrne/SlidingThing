@@ -37,7 +37,7 @@
         </Storyboard>
     </Page.Resources>
     
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid x:Name="MainGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center"  >
             <RadioButton x:Name="rbFour" Tag="4" Content="4 x 4" Margin="2" Checked="rbSize_Checked"/>

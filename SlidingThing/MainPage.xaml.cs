@@ -27,6 +27,7 @@ namespace SlidingThing
     public sealed partial class MainPage : Page
     {
         private double _ellipseHeight, _ellipseWidth, _gridSize;
+        Image img = new Image();
         public MainPage()
         {
             this.InitializeComponent();
@@ -44,18 +45,21 @@ namespace SlidingThing
             createGameGrid(gridSize);
 
             // add picture
-            Image img = new Image();
+            
             img.Source = new BitmapImage(new Uri("ms-appx:///Assets/Pictures/tree.png"));
+            img.Width = 600;
+            img.Height = 600;
+
+           // MainGrid.Children.Add(img);
 
 
+            /*  img.HorizontalAlignment = HorizontalAlignment.Center;
+              img.VerticalAlignment = VerticalAlignment.Center;
+              img.SetValue(Grid.RowProperty, 0);
+              img.SetValue(Grid.ColumnProperty, 0);
 
-            img.HorizontalAlignment = HorizontalAlignment.Center;
-            img.VerticalAlignment = VerticalAlignment.Center;
-            img.SetValue(Grid.RowProperty, 0);
-            img.SetValue(Grid.ColumnProperty, 0);
-           
-    
-            contentGrid.Children.Add(img);
+
+              contentGrid.Children.Add(img);*/
 
         }
 
@@ -67,22 +71,36 @@ namespace SlidingThing
                 contentGrid.ColumnDefinitions.Add(new ColumnDefinition());
             }
 
-            // add rectangle to the grid squares
+            // add canvas to the grid squares
             // make them a little smaller
-            Rectangle myR;
+            Canvas myC;
             for(cols = 0; cols < gridSize; cols++) {
                 for(rows = 0; rows < gridSize; rows++) {
-                    myR = new Rectangle();
-                    myR.Name = "r" + cols.ToString() + "_" + rows.ToString(); // r0_1
-                    myR.Width = (contentGrid.Width / gridSize) - 4;
-                    myR.Height = (contentGrid.Height / gridSize) - 4;
-                    myR.HorizontalAlignment = HorizontalAlignment.Center;
-                    myR.VerticalAlignment = VerticalAlignment.Center;
-                    myR.SetValue(Grid.RowProperty, rows);
-                    myR.SetValue(Grid.ColumnProperty, cols);
-                    myR.Fill = new SolidColorBrush(Colors.LightGray);
-                    myR.Tapped += MyR_Tapped;
-                    contentGrid.Children.Add(myR);
+                    myC = new Canvas();
+                    myC.Name = "c" + cols.ToString() + "_" + rows.ToString(); // r0_1
+                    myC.Width = (contentGrid.Width / gridSize) - 4;
+                    myC.Height = (contentGrid.Height / gridSize) - 4;
+                    myC.HorizontalAlignment = HorizontalAlignment.Center;
+                    myC.VerticalAlignment = VerticalAlignment.Center;
+                    myC.SetValue(Grid.RowProperty, rows);
+                    myC.SetValue(Grid.ColumnProperty, cols);
+
+                    Image other = new Image();
+
+                    other.Source = new BitmapImage(new Uri("ms-appx:///Assets/Pictures/tree.png"));
+                    other.Width = 600;
+                    other.Height = 600;
+
+                    RectangleGeometry r = new RectangleGeometry();
+                    r.Rect = new Rect(rows, cols, (contentGrid.Width / gridSize) - 4, (contentGrid.Height / gridSize) - 4);
+                    other.Clip = r;
+
+                    
+
+                    myC.Children.Add(other);
+
+                    myC.Tapped += MyR_Tapped;
+                    contentGrid.Children.Add(myC);
                 }
             }
 
@@ -125,8 +143,8 @@ namespace SlidingThing
             if(_current == null) return;
 
 
-            Rectangle sqNew = (Rectangle)sender;
-            _newSquare = sqNew;
+            Canvas canNew = (Canvas)sender;
+            _newCanvas = canNew;
 
             // run the disappear storyboard.
             dblAniHeight.SetValue(Storyboard.TargetNameProperty, _current.Name.ToString());
@@ -144,7 +162,7 @@ namespace SlidingThing
 
         private bool animationRunning;
         private Ellipse _current;
-        private Rectangle _newSquare;
+        private Canvas _newCanvas;
         private void MyE_Tapped(object sender, TappedRoutedEventArgs e) {
             // set off the animation using the sender as the target
             Ellipse curr = (Ellipse)sender;
@@ -170,8 +188,8 @@ namespace SlidingThing
             // runs after the storyboard finishes
             sbStrokeAnimation.Stop();
 
-            _current.SetValue(Grid.RowProperty, _newSquare.GetValue(Grid.RowProperty));
-            _current.SetValue(Grid.ColumnProperty, _newSquare.GetValue(Grid.ColumnProperty));
+            _current.SetValue(Grid.RowProperty, _newCanvas.GetValue(Grid.RowProperty));
+            _current.SetValue(Grid.ColumnProperty, _newCanvas.GetValue(Grid.ColumnProperty));
 
             sbNowYouSeeIt.Stop();
 
