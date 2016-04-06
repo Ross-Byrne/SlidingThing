@@ -43,24 +43,6 @@ namespace SlidingThing
 
             _gridSize = gridSize;
             createGameGrid(gridSize);
-
-            // add picture
-            
-            img.Source = new BitmapImage(new Uri("ms-appx:///Assets/Pictures/tree.png"));
-            img.Width = 600;
-            img.Height = 600;
-
-           // MainGrid.Children.Add(img);
-
-
-            /*  img.HorizontalAlignment = HorizontalAlignment.Center;
-              img.VerticalAlignment = VerticalAlignment.Center;
-              img.SetValue(Grid.RowProperty, 0);
-              img.SetValue(Grid.ColumnProperty, 0);
-
-
-              contentGrid.Children.Add(img);*/
-
         }
 
         private void createGameGrid(int gridSize) {
@@ -74,6 +56,11 @@ namespace SlidingThing
             // add canvas to the grid squares
             // make them a little smaller
             Canvas myC;
+            double totalWidth = 0;
+            double totalHeight = 0;
+            double sectorsWidth = 600 / gridSize;
+            double sectorHeight = 600 / gridSize;
+
             for(cols = 0; cols < gridSize; cols++) {
                 for(rows = 0; rows < gridSize; rows++) {
                     myC = new Canvas();
@@ -90,18 +77,25 @@ namespace SlidingThing
                     other.Source = new BitmapImage(new Uri("ms-appx:///Assets/Pictures/tree.png"));
                     other.Width = 600;
                     other.Height = 600;
+                 
 
                     RectangleGeometry r = new RectangleGeometry();
-                    r.Rect = new Rect(rows, cols, (contentGrid.Width / gridSize) - 4, (contentGrid.Height / gridSize) - 4);
+                    r.Rect = new Rect(totalWidth, totalHeight, sectorsWidth, sectorHeight);
+
+                    // increament width
+                    totalWidth += sectorsWidth;
+
+                    // set the image clip
                     other.Clip = r;
-
-                    
-
                     myC.Children.Add(other);
 
                     myC.Tapped += MyR_Tapped;
                     contentGrid.Children.Add(myC);
                 }
+
+                // increament
+                totalHeight += sectorHeight;
+
             }
 
             Ellipse myE;
